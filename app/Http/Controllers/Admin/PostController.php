@@ -47,6 +47,9 @@ class PostController extends Controller
         $request->validate([
             'title'=>'required|max:250',
             'content'=>'required'
+        ],[
+            'title'=>'Il titolo deve essere valorizzato',
+            'content.min'=>'Inserisci minimo 5 caratteri'
         ]);
         $postData = $request->all();
         $newPost = new Post();
