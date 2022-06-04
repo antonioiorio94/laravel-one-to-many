@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 
 
 use App\Post;
+use App\Category;
 
 class PostController extends Controller
 {
@@ -32,7 +33,9 @@ class PostController extends Controller
     public function create()
     {
         //
-        return view('admin.posts.create');
+        $categories = Category::all();
+
+        return view('admin.posts.create', compact('categories'));
     }
 
     /**
@@ -46,10 +49,12 @@ class PostController extends Controller
         //
         $request->validate([
             'title'=>'required|max:250',
-            'content'=>'required'
+            'content'=>'required',
+            'category_id'=>'required|exists:categories,id'
         ],[
             'title'=>'Il titolo deve essere valorizzato',
-            'content.min'=>'Inserisci minimo 5 caratteri'
+            'content.min'=>'Inserisci minimo 5 caratteri',
+            'category_id.exists' => 'La categoria selezionata non esiste'
         ]);
         $postData = $request->all();
         $newPost = new Post();
@@ -89,7 +94,10 @@ class PostController extends Controller
         if(!$post){
             abort(404);
         }
-        return view('admin.posts.edit', compact('post'));
+
+        $categories = Category::all();
+
+        return view('admin.posts.edit', compact('post', 'categories'));
     }
 
     /**
@@ -104,7 +112,12 @@ class PostController extends Controller
         //
         $request->validate([
             'title'=>'required|max:250',
-            'content'=>'required'
+            'content'=>'required',
+            'category_id' => 'required|exists:category,id'
+        ], [
+            'title'=>'Il titolo deve essere valorizzato',
+            'content.min'=>'Inserisci minimo 5 caratteri',
+            'category_id.exists' => 'La categoria selezionata non esiste'
         ]);
         $postData = $request->all();
 

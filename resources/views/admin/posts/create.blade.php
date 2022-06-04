@@ -23,6 +23,8 @@
                 </div>
                 <form action="{{ route('admin.posts.store') }}" method="post" enctype="multipart/form-data">
                     @csrf
+
+
                     <div class="form-group">
                         <label>Titolo</label>
                         <input type="text" name="title" class="form-control @error('title') is-invalid @enderror"
@@ -31,9 +33,34 @@
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
+
+
+                    <div class="form-group">
+                        <label>Categoria</label>
+                        <select name="category_id">
+                            <option value="">--Scegli Categoria--</option>
+
+                            @foreach ($categories as $category)
+                                <option value="{{ $category->id}}"
+
+                                    {{$category->id == old('category_id')? 'selected':''}}>
+                                    {{$category->name}}
+
+                                </option>
+
+                            @endforeach
+
+                        </select>
+
+                        @error('category_id')
+                            <div class="d-block invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+
                     <div class="form-group">
                         <label>Contenuto</label>
-                        <textarea name="content" class="form-control" @error('content') is-invalid @enderror" rows="10"
+                        <textarea name="content" class="form-control" @error('content') is-invalid @enderror rows="10"
                                   placeholder="Scrivi qualcosa" required>
                         {{ old('content') }}
                         </textarea>
